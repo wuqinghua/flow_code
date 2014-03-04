@@ -1,0 +1,14 @@
+域   描述                值
+1    请求端ip:port       --
+2    服务器端ip:port     --
+3    方向                IN: client->server OUT: server->client
+4    包的TCP状态         S: syn标志 F：FIN标志 R：RST标志 P：PUSH标志 .: ack标志
+5    数据包的Seq         --
+6    包的ack seq         --
+7    包长（应用层）      --
+8    包的时间戳          --
+9    发送端mss           --
+10   接受窗口            --
+11   接受窗口因子        --
+12   包的应用层标识      用于标识应用层的一些关键包： HTTP_REQ：HTTP请求 200/206：HTTP响应包状态码 Nop：空
+13   包的状态码          用于表示包的TCP状态标识和应用层标识位操作码。（可以不用关心）
