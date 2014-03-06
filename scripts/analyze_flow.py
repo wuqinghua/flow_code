@@ -73,7 +73,7 @@ def handle_list(lst):
     print '\n'
 
 if len(sys.argv) == 1:
-    ifile = open('clean_flows.txt')
+    ifile = open('/home/zhoujianer/360_flow/clean_flows.txt')
 else:
     ifile = open(sys.argv[1])
 
