@@ -54,23 +54,25 @@ def handle_list(lst):
             out_list.append(seq)
             out_time_list.append(t)
 
-    data = out_list[-1]-out_list[0]
-    time = out_time_list[-1]-out_time_list[0]
+    if len(out_list) > 1:
+        data = out_list[-1]-out_list[0]
 
-    print data, time 
-    print 'send: '
-    for _ in send_rate_list:
-        print '%d:%.6f' % (_[0], _[1]),
-    print '\nrecv: '
-    for _ in recv_rate_list:
-        print '%d:%.6f' % (_[0], _[1]),
-    print '\nretrans: '
-    for _ in retrans_list:
-        print '%3s:%.6f' % (_[0], _[1]),
-    print '\nRTT: '
-    for _ in rtt_list:
-        print '%.6f' % (_), 
-    print '\n'
+        time = out_time_list[-1]-out_time_list[0]
+    
+        print data, time 
+        print 'send: '
+        for _ in send_rate_list:
+            print '%d:%.6f' % (_[0], _[1]),
+        print '\nrecv: '
+        for _ in recv_rate_list:
+            print '%d:%.6f' % (_[0], _[1]),
+        print '\nretrans: '
+        for _ in retrans_list:
+            print '%3s:%.6f' % (_[0], _[1]),
+        print '\nRTT: '
+        for _ in rtt_list:
+            print '%.6f' % (_), 
+        print '\n'
 
 if len(sys.argv) == 1:
     ifile = open('/home/zhoujianer/360_flow/clean_flows.txt')
@@ -84,6 +86,7 @@ while True:
 
     lst = list()
     num = int(line)
+    print num
     for _ in range(num):
         line = ifile.readline()
         lst.append(tuple([ _ for _ in line.strip().split() ]))
