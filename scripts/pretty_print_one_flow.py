@@ -2,28 +2,25 @@
 
 import fileinput
 
-lst = list()
+in_seq = 0
+in_ack = 0
+time = -1
+
 for line in fileinput.input():
-    _ = line.strip().split()
-    # time, dir, seq, ack, flag, len
-    t = (float(_[7]), _[2], int(_[4]), int(_[5]), _[3], _[6])
-    lst.append(t)
+    pkt = line.strip().split()
 
-lst.sort(key=lambda x:x[0])
+    if time == -1:
+        time = float(pkt[7])
 
-time = lst[0][0]
-dir = lst[0][1]
-seq = lst[0][2]
-ack = lst[0][3]
-
-num = dict()
-if dir == 'IN':
-    num['IN']  = [ seq, ack ]
-    num['OUT'] = [ ack, seq ]
-else:
-    num['IN']  = [ ack, seq ]
-    num['OUT'] = [ seq, ack ]
-
-for t in lst:
-    d = num[t[1]]
-    print '%3.6f\t%3s\t%8d\t%8d\t%2s\t%8s' % (t[0]-time, t[1], t[2]-d[0], t[3]-d[1], t[4], t[5])
+    if pkt[2] == 'OUT':
+        if in_seq == 0:
+            in_seq = int(pkt[5])
+        if in_ack == 0:
+            in_ack = int(pkt[4])
+        print '%3.6f %s %d %d %s %s' % (float(pkt[7])-time, pkt[2], int(pkt[4])-in_ack, int(pkt[5])-in_seq, pkt[3], pkt[6])
+    else:
+        if in_seq == 0:
+            in_seq = int(pkt[4])
+        if in_ack == 0:
+            in_ack = int(pkt[5])
+        print '%3.6f %s %d %d %s %s' % (float(pkt[7])-time, pkt[2], int(pkt[4])-in_seq, int(pkt[5])-in_ack, pkt[3], pkt[6])

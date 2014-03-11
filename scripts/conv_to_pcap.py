@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
+import fileinput
 from socket import inet_aton
 from struct import pack, unpack
-
 
 def carry_around_add(a, b):
     c = a + b
@@ -61,11 +61,11 @@ def conv_to_pcap(pkt):
     cap_len = 54
     
     pkt_hdr = pack('IIII', sec, usec, cap_len, pkt_len)
+
     eth_hdr = pack('!6s6sH', src_eth, dst_eth, 0x0800)
     
     ip1 = unpack("!L", inet_aton(src_ip))[0]
     ip2 = unpack("!L", inet_aton(dst_ip))[0]
- 
     ip_hdr = pack('!BBHHHBBHII', 0x45, 0x00, ip_len, 0, 0, 64, 0x06, 0x00, ip1, ip2)
     ip_hdr = update_cs(ip_hdr)
 
@@ -75,13 +75,18 @@ def conv_to_pcap(pkt):
 
 fheader = pack('IHHIIII', 0xA1B2C3D4, 0x0002, 0x0004, 0, 0, 0xFFFF, 0x01)
 
-ofile = open('test.pcap', 'w')
+ofile = open('flow.pcap', 'w')
+
 # write file header
 ofile.write(fheader)
 
-# write each packet
-for _ in open('../flows/f1.txt'):
-    pkt = conv_to_pcap(_.strip().split())
+for _ in fileinput.input():
+    # write each packet
+    items = _.strip().split()
+    if len(items) < 13:
+        continue
+
+    pkt = conv_to_pcap(items)
     ofile.write(pkt)
 
 ofile.close()

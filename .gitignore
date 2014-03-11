@@ -35,4 +35,6 @@ nosetests.xml
 .project
 .pydevproject
 
+flow_data
+flow_data/*
 temp/*
