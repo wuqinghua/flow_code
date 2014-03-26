@@ -11,10 +11,14 @@ flag_dic = { 1:'F', 2:'S', 4:'R', 8:'P', 16:'.', 32:'U', 64:'E', 128:'C', 256:'N
 def get_flags(s):
     return ''.join([ flag_dic.get(1 << i & s, '') for i in range(9) ])
 
-f = open('flow.pcap')
+f = open('../flow_data/20140319.pcap')
 pcap = dpkt.pcap.Reader(f)
 
+i = 0
 for ts, buf in pcap:
+    i += 1
+    if i <= 17712307:
+        continue
 
     eth = dpkt.ethernet.Ethernet(buf)
     ip = eth.data
@@ -23,7 +27,12 @@ for ts, buf in pcap:
     src_ip = socket.inet_ntoa(ip.src)
     dst_ip = socket.inet_ntoa(ip.dst)
 
-    src_port = tcp.sport
+    try:
+        src_port = tcp.sport
+    except AttributeError:
+        sys.stderr.write('%s, %s\n' % (src_ip, dst_ip))
+        continue
+
     dst_port = tcp.dport
     seq, ack = tcp.seq, tcp.ack
     win = tcp.win

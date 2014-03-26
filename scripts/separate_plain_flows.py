@@ -1,13 +1,13 @@
 #!/usr/bin/python
 
 flow_list = list()
-for line in open('flow_pairs.txt'):
-    t = line.strip().split()[0]
+for line in open('../flow_data/20140319_flows.txt'):
+    t = line.strip()
     flow_list.append(t)
 
-group = 20000
+group = 100000
 
-ofile = open('clean_flows.txt', 'w')
+ofile = open('../flow_data/20140319_plain_sorted.txt', 'w')
 start = 0
 while start < len(flow_list):
     end = start + group
@@ -17,10 +17,14 @@ while start < len(flow_list):
     for flow in flows:
         dic[flow] = list()
 
-    for line in open('dl.flow.txt'):
+    i = 0
+    for line in open('../flow_data/20140319_plain.txt'):
         t = tuple([ _ for _ in line.strip().split() ])
         if dic.has_key(t[0]):
             dic[t[0]].append(t)
+        i += 1
+        if i % 10000000 == 0:
+            print start, i
 
     for k, v in dic.iteritems():
         if len(v) > 0:
